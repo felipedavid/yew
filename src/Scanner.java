@@ -59,11 +59,43 @@ class Scanner {
             case '\t':
               // Ignore whitespace.
               break;
-            case '\n': line++; break;
+            case '\n': line++;  break;
+            case '"': 
+                while (peek() != '"' && current < source.length) {
+                    if (peek() == '\n') line++;
+                    current++;
+                }
+
+                if (current >= source.length) {
+                    Lox.Error("Unterminated string");
+                    return;
+                }
+
+                // The closing ".
+                current++;
+
+                String value = source.substring(start + 1, current - 1);
+                addToken(STRING, value);
+                break;
             default:
-                Tsundere.error(line, "Unexpected Character");
+                if (isDigit(c)) {
+                    while (isDigit(peek())) current++;
+
+                    // Look for a fractional part
+                    if (peek() == '.' && isDigit(peekNext())) {
+                        current++;
+                        while (isDigit(peek())) current++;
+                    }
+                    addToken(TOKEN, Double.parseDouble(source.substring(start, current)));
+                } else {
+                    Lox.error(line, "Unexpected character.");
+                }
                 break;
         }
+    }
+
+    private boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
     }
 
     private boolean match(char expected) {
