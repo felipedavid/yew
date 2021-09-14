@@ -1,4 +1,4 @@
 if not exist ..\..\bin\ {
     mkdir ..\..\bin\
 }
-cl.exe /Zi /EHsc main.cpp -o ..\..\bin\tsundere.exe
+cl.exe /Zi /EHsc main.cpp scanner.cpp token.cpp -o ..\..\bin\tsundere.exe

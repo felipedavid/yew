@@ -3,9 +3,11 @@
 #include <fstream>
 #include <sstream>
 
+#include "scanner.h"
+
 void run(std::string source) {
     Scanner scanner(source);
-    vector<Token> tokens = scanner.scan_tokens();
+    std::vector<Token> tokens = scanner.scan_tokens();
 
     for (auto token : tokens) {
         std::cout << token.lexeme << std::endl;
