@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
+
+#include "scanner.h"
 
 void run(std::string source) {
     Scanner scanner(source);
