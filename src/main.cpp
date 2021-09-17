@@ -10,7 +10,7 @@ void run(std::string source) {
     std::vector<Token> tokens = scanner.scan_tokens();
 
     for (auto token : tokens) {
-        std::cout << token.lexeme << std::endl;
+        std::cout << "\"" << token.lexeme << "\"" << std::endl;
     }
 }
 

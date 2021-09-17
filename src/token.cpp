@@ -1,9 +1,9 @@
 #include "token.h"
 
-Token::Token(Token_type type, std::string lexeme, Literal_Type literal, int line) {
+Token::Token(Token_Type type, std::string lexeme, int line, uint64_t literal) {
     this->type = type;
     this->lexeme = lexeme;
-    this->literal = literal;
+    this->integer_value = literal;
     this->line = line;
 }
 
