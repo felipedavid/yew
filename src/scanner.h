@@ -13,6 +13,7 @@ struct Scanner {
     Scanner(std::string source);
     bool is_at_end();
     std::vector<Token> scan_tokens();
+    char peek();
     bool match(char expected);
     void scan_token();
     void add_token(Token_Type type);

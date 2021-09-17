@@ -29,10 +29,38 @@ void Scanner::scan_token() {
         case ';': add_token(SEMICOLON); break;
         case '*': add_token(STAR); break; 
         case '!': add_token(match('=') ? BANG_EQUAL : BANG); break;
+        case '=': add_token(match('=') ? EQUAL_EQUAL : EQUAL); break;
+        case '<': add_token(match('=') ? LESS_EQUAL : LESS); break;
+        case '>': add_token(match('=') ? GREATER_EQUAL : GREATER); break;
+        case '/':
+            if (match('/')) {
+                while (peek() != '\n' && !is_at_end()) current++;
+            } else {
+                add_token(SLASH);
+            }
+            break;
+        // ingnore white spaces
+        case ' ':
+        case '\t':
+        case '\r':
+            break;
+        case '\n': line++; break;
+        case '"':
+            while (peek() != '"' && !is_at_end()) current++;
+            if (is_at_end()) {
+                std::cout << "Unfinished string" << std::endl;
+                exit(1);
+            }
+            break;
         default:
             std::cout << line << " Unexpected Character" << std::endl;
             break;
     }
+}
+
+char Scanner::peek() {
+    if (is_at_end()) return '\0';
+    return source[current];
 }
 
 bool Scanner::match(char expected) {
