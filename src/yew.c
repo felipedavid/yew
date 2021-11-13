@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "stretchy_buffer.h"
+#include "scanner.h"
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -21,11 +22,9 @@ int main(int argc, char **argv) {
     long fsize = ftell(f);
     fseek(f, 0, SEEK_SET);
     fread(buffer, 1, fsize, f);
+    buffer[fsize] = '\0';
 
-    printf("%s\n", buffer);
-    
-    // Scan tokens
-    // Token *tokens = scan(buffer);
+    printf("%s", buffer);
 
     fclose(f);
 }
