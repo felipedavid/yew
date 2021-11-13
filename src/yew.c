@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "stretchy_buffer.h"
+
 int main(int argc, char **argv) {
     if (argc < 2) {
         printf("Usage: ./yew program.yew\n");
