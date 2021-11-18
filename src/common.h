@@ -22,5 +22,10 @@ typedef struct {
 #define buf_free(b) (b ? free(buf__hdr(b)), (b = NULL) : 0)
 
 void buf_test();
+void *xrealloc(void *ptr, size_t n_bytes);
+void *xmalloc(size_t n_bytes);
+const char *str_intern_range(const char *start, const char *end);
+const char *str_intern(const char *str);
+void str_intern_test();
 
 #endif

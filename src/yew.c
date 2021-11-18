@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "stretchy_buffer.h"
+#include "common.h"
 #include "scanner.h"
 
 int main(int argc, char **argv) {
+    buf_test();
+    scanner_test();
+    str_intern_test();
+
     if (argc < 2) {
         printf("Usage: ./yew program.yew\n");
         exit(-1);
