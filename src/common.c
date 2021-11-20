@@ -92,5 +92,6 @@ void str_intern_test() {
     const char *py = str_intern(y);
     assert(px == py);
     char z[] = "hello!";
-    assert(str_intern(z) != str_intern(x));
+    const char *pz = str_intern(z);
+    assert(pz != px);
 }

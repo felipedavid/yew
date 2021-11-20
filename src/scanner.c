@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "scanner.h"
+#include "common.h"
 
 Token token;
 const char *stream;
@@ -24,6 +25,7 @@ void next_token() {
         stream++;
         while (isalpha(*stream) || *stream == '_') stream++;
         token.type = TOKEN_NAME;
+        token.name = str_intern_range(token.start, stream);
         break;
     }
     default:
@@ -48,7 +50,7 @@ void print_token(Token token) {
 }
 
 void scanner_test() {
-    stream = "+()_HELLO1,234+FOO!994";
+    stream = "XY+(XY)_HELLO1,234+FOO!994";
     next_token();
     while (token.type) {
         print_token(token);

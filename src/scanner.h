@@ -14,6 +14,7 @@ typedef struct {
     const char *end;
     union {
         uint64_t val;
+        const char *name;
     };
 } Token;
 
