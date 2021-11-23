@@ -2,6 +2,7 @@
 #define SCANNER
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef enum {
     TOKEN_INT = 128, 

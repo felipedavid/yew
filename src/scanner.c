@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdint.h>
+#include <stdarg.h>
 
 #include "scanner.h"
 #include "common.h"
@@ -55,5 +56,50 @@ void scanner_test() {
     while (token.type) {
         print_token(token);
         next_token();
+    }
+}
+
+void fatal(const char *fmt, ...) {
+}
+
+const char *keyword_if;
+const char *keyword_for;
+const char *keyword_while;
+
+void init_keywords() {
+    keyword_if = str_intern("if");
+    keyword_for = str_intern("for");
+    keyword_while = str_intern("while");
+}
+
+inline bool is_token(Token_Type type) {
+    return token.type == type;
+}
+
+inline bool is_token_name(const char *str) {
+    return token.kind == TOKEN_NAME && token.name == str;
+}
+
+inline bool match_token(Token_Type type) {
+    if (is_token(type)) {
+        next_token(); 
+        return true;
+    }
+    return false;
+}
+
+inline bool expect_token(Token_Type type) {
+    if (is_token(kind)) {
+        next_token();
+        return true;
+    } else {
+        fatal("expected token %s, got %s", token_type_name(type), token_type_name(token.type));
+    }
+}
+
+void parse_stmt() {
+    if (is_token_name(keyword_if)) {
+        next_token();
+        parse_if_stmt();
     }
 }
