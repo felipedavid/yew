@@ -5,6 +5,8 @@
 #include <ctype.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
+#include <stdarg.h>
 
 #define MAX(x, y) (x > y ? x : y)
 typedef uint64_t u64;
@@ -31,6 +33,10 @@ void *xrealloc(void *ptr, size_t n_bytes) {
         exit(1);
     }
     return ptr;
+}
+
+void fatal(const char *fmt, ...) {
+      
 }
 
 #define buf__hdr(b) (b ? (Buf_Hdr *)((char *)b - offsetof(Buf_Hdr, buf)) : 0)
@@ -100,12 +106,55 @@ typedef struct {
     const char *end;
     union {
         u64 value;
-        const char *str;
+        const char *name;
     };
 } Token;
 
 Token token;
 const char *stream;
+
+const char *token_type_name(Token_Type type) {
+    switch (type) {
+        case TOKEN_NAME: return "TOKEN_NAME";
+        case TOKEN_INT: return "TOKEN_INT";
+    }
+}
+
+const char *keyword_if;
+const char *keyword_for;
+const char *keyword_while;
+
+void init_keywords() {
+    keyword_if = str_intern("if");
+    keyword_for = str_intern("for");
+    keyword_while = str_intern("while");
+}
+
+inline bool is_token(Token_Type type) {
+    return token.type == type;
+}
+
+inline bool is_token_name(const char *name) {
+    return token.type == TOKEN_NAME && token.name == name;
+}
+
+inline bool match_token(Token_Type type) {
+    if (is_token(type)) {
+        next_token();
+        return true;
+    }
+    return false;
+}
+
+inline bool expect_token(Token_Type type) {
+    if (is_token(kind)) {
+        next_token();
+        return true;
+    } else {
+        fatal("expected token %s, got %s\n", token_type_name(type), token_type_name(token.type));
+        return false;
+    }
+}
 
 void next_token() {
     token.start = stream;
@@ -117,7 +166,7 @@ void next_token() {
             stream++;
         }
         token.type = TOKEN_NAME;
-        token.str = str_intern_range(token.start, stream);
+        token.name = str_intern_range(token.start, stream);
     } break;
     case '0' ... '9': {
         stream++;
@@ -139,7 +188,7 @@ void next_token() {
 void print_token(Token token) {
     switch (token.type) {
     case TOKEN_INT: printf("TOKEN_INT, value: %d", token.value); break;
-    case TOKEN_NAME: printf("TOKEN_NAME, value: %s", token.str); break;
+    case TOKEN_NAME: printf("TOKEN_NAME, value: %s", token.name); break;
     default: printf("OTHER"); break;
     }
     // Print lexeme
@@ -148,7 +197,7 @@ void print_token(Token token) {
 
 // Test lexer
 void lex_test() {
-    stream = "abc123+34"; 
+    stream = "XY+(XY)_HELLO1,234+FOO!994"; 
     next_token();
     while (token.type) {
         print_token(token);
@@ -176,12 +225,16 @@ void buf_test() {
 }
 
 void str_intern_test() {
-    const char *x = str_intern("hello");
-    const char *y = str_intern("hello");
-    assert(x == y);
+    char x[] = "hello";
+    char y[] = "hello";
+    assert(x != y);
+    const char *px = str_intern(x);
+    const char *py = str_intern(y);
+    assert(px == py);
 
-    const char *z = str_intern("hello!");
-    assert(z != x);
+    char z[] = "hello!";
+    const char *pz = str_intern(z);
+    assert(pz != px);
 }
 
 int main() {
