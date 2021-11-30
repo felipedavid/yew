@@ -36,7 +36,12 @@ void *xrealloc(void *ptr, size_t n_bytes) {
 }
 
 void fatal(const char *fmt, ...) {
-      
+    va_list args
+    va_start(args, fmt);
+    printf("FATAL: ");
+    vprintf(fmt, args);
+    printf("\n");
+    va_end(args);
 }
 
 #define buf__hdr(b) (b ? (Buf_Hdr *)((char *)b - offsetof(Buf_Hdr, buf)) : 0)
@@ -156,6 +161,10 @@ inline bool expect_token(Token_Type type) {
     }
 }
 
+void parse_expr() {
+    
+}
+
 void next_token() {
     token.start = stream;
     switch(*stream) {
@@ -183,6 +192,26 @@ void next_token() {
         break;
     }
     token.end = stream;
+}
+
+// This returns a pointer to a static internal buffer that will be overwritten next call.
+const char *token_type_name(Token_Type type) {
+    static char buf[256];
+    switch (kind) {
+    case TOKEN_INT:
+        sprintf(buf, "integer");
+        break;
+    case TOKEN_NAME:
+        sprintf(buf, "name");
+        break;
+    default:
+        if (type < 128 && isprint(type)) {
+            sprintf(buf, "%c", kind);
+        } else {
+            sprintf(buf, "<ASCII %d>", type);
+        }
+    }
+    return buf;
 }
 
 void print_token(Token token) {
