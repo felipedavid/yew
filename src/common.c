@@ -1,8 +1,37 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "common.h"
+
+void fatal(const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    printf("FATAL: ");
+    vprintf(fmt, args);
+    printf("\n");
+    va_end(args);
+    exit(1);
+}
+
+void *xmalloc(size_t n_bytes) {
+    void *ptr = malloc(n_bytes);
+    if (!ptr) {
+        perror("[!] xmalloc failed\n");
+        exit(1);
+    }
+    return ptr;
+}
+
+void *xrealloc(void *ptr, size_t n_bytes) {
+    ptr = realloc(ptr, n_bytes);
+    if (!ptr) {
+        perror("[!] xrealloc failed\n");
+        exit(1);
+    }
+    return ptr;
+}
 
 void *buf__grow(void *buf, size_t min_cap, size_t elem_size) {
     size_t new_cap = MAX(min_cap, buf_len(buf) * 2 + 1);
@@ -10,9 +39,9 @@ void *buf__grow(void *buf, size_t min_cap, size_t elem_size) {
 
     Buf_Hdr *new_buf = NULL;
     if (buf) {
-        new_buf = realloc(buf__hdr(buf), new_size);
+        new_buf = xrealloc(buf__hdr(buf), new_size);
     } else {
-        new_buf = malloc(new_size);
+        new_buf = xmalloc(new_size);
         new_buf->len = 0;
     }
     new_buf->cap = new_cap;
@@ -22,6 +51,7 @@ void *buf__grow(void *buf, size_t min_cap, size_t elem_size) {
 
 void buf_test() {
     int *buf = NULL;
+    assert(buf_len(buf) == 0);
     enum { N = 1024 };
     for (int i = 0; i < N; i++) {
         buf_push(buf, i);
@@ -52,7 +82,7 @@ const char *str_intern_range(const char *start, const char *end) {
             return interns[i].str;
         }
     }
-    char *str = malloc(len + 1);
+    char *str = xmalloc(len + 1);
     strncpy(str, start, len);
     str[len] = 0;
 

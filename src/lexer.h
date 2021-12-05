@@ -10,7 +10,7 @@ typedef struct {
     const char *end;
     union {
         long val;
-        const char *str;
+        const char *name;
     };
 } Token;
 
