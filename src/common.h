@@ -20,3 +20,4 @@ typedef struct {
 void buf_test();
 void str_intern_test();
 const char *str_intern_range(const char *start, const char *end);
+void fatal(const char *fmt, ...);

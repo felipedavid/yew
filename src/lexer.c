@@ -54,38 +54,17 @@ void lex_test() {
 }
 
 const char *token_type_name(Token_Type type) {
-    static const char buf[256];
+    static char buf[256];
     switch (type) {
     case TOKEN_NAME: sprintf(buf, "name"); break;
-    case TOKEN_INT:  sprintf(buf, "int"); break;
+    case TOKEN_INT:  sprintf(buf, "int");  break;
     default: 
         if (type < 128 && isprint(type)) {
             sprintf(buf, "%c", type);
         } else {
-            sprintf(buf, "<ASCII %d>", kind);
+            sprintf(buf, "<ASCII %d>", type);
         }
         break;
     }
     return buf;
-}
-
-inline bool is_token(Token_Type type) {
-    return token.type == type;
-}
-
-inline bool is_token_name(const char *name) {
-    return is_token(TOKEN_NAME) && token.name == name;
-}
-
-inline bool match_token(Token_Type type) {
-    if (is_token(type)) {
-        next_token();
-        return true;
-    }
-    return false;
-}
-
-inline void expect_token(Token_Type type) {
-    if (is_token(type)) next_token();
-    fatal("expected token %s, got %s", token_type_name(type), token_type_name(token.type));
 }
