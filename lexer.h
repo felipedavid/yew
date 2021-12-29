@@ -15,3 +15,5 @@ typedef struct {
 } Token;
 
 void lex_test();
+void next_token();
+const char *token_type_name(Token_Type type);

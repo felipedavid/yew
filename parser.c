@@ -1,5 +1,9 @@
+#include <stdbool.h>
+
 #include "common.h"
 #include "lexer.h"
+
+extern Token token;
 
 inline bool is_token(Token_Type type) {
     return token.type == type;
@@ -23,5 +27,4 @@ inline void expect_token(Token_Type type) {
 }
 
 void parse_expr() {
-    
 }
