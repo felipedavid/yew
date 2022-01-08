@@ -1,5 +1,6 @@
 *.swp
-/bin
+bin/
 *.obj
 *.o
-yew
+x64/
+*vc*
