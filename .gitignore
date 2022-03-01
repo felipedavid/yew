@@ -1,6 +1,3 @@
-*.swp
-bin/
-*.obj
+*.S
 *.o
-x64/
-*vc*
+*.swp
